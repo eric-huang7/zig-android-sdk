@@ -1,10 +1,12 @@
 package com.ziggeo.androidsdk.demo.presentation.topclients
 
 import com.arellomobile.mvp.InjectViewState
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.ziggeo.androidsdk.demo.model.data.feature.ClientModel
 import com.ziggeo.androidsdk.demo.model.interactor.TopClientsInteractor
+import com.ziggeo.androidsdk.demo.model.system.flow.FlowRouter
 import com.ziggeo.androidsdk.demo.model.system.message.SystemMessageNotifier
-import com.ziggeo.androidsdk.demo.presentation.global.BasePresenter
+import com.ziggeo.androidsdk.demo.presentation.global.BaseMainFlowPresenter
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
@@ -17,8 +19,10 @@ import javax.inject.Inject
 @InjectViewState
 class TopClientsPresenter @Inject constructor(
     private var topClientsInteractor: TopClientsInteractor,
-    systemMessageNotifier: SystemMessageNotifier
-) : BasePresenter<TopClientsView>(systemMessageNotifier) {
+    router: FlowRouter,
+    systemMessageNotifier: SystemMessageNotifier,
+    analytics: FirebaseAnalytics
+) : BaseMainFlowPresenter<TopClientsView>(router, systemMessageNotifier, analytics) {
     private var disposable: Disposable? = null
 
     override fun onFirstViewAttach() {

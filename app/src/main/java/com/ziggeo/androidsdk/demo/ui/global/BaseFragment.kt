@@ -8,11 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.ziggeo.androidsdk.demo.di.DI
 import com.ziggeo.androidsdk.demo.util.objectScopeName
 import timber.log.Timber
 import toothpick.Scope
 import toothpick.Toothpick
+import javax.inject.Inject
 
 private const val PROGRESS_TAG = "PROGRESS_TAG"
 private const val STATE_SCOPE_NAME = "STATE_SCOPE_NAME"
@@ -24,10 +27,12 @@ private const val STATE_SCOPE_NAME = "STATE_SCOPE_NAME"
  */
 abstract class BaseFragment : MvpAppCompatFragment() {
     abstract val layoutRes: Int
-
     private var instanceStateSaved: Boolean = false
-
     private val viewHandler = Handler()
+    protected lateinit var root: View
+
+    @Inject
+    protected lateinit var analytics: FirebaseAnalytics
 
     protected open val parentScopeName: String by lazy {
         (parentFragment as? BaseFragment)?.fragmentScopeName
@@ -60,11 +65,25 @@ abstract class BaseFragment : MvpAppCompatFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = inflater.inflate(layoutRes, container, false)
+    ): View {
+        root = inflater.inflate(layoutRes, container, false)
+        return root
+    }
 
     override fun onResume() {
         super.onResume()
+
+        analytics.logEvent("resume_screen") {
+            param("name", this.javaClass.simpleName)
+        }
         instanceStateSaved = false
+    }
+
+    override fun onPause() {
+        super.onPause()
+        analytics.logEvent("pause_screen") {
+            param("name", this.javaClass.simpleName)
+        }
     }
 
     // Fix for async views (like swipeToRefresh and RecyclerView)
@@ -106,14 +125,14 @@ abstract class BaseFragment : MvpAppCompatFragment() {
             else -> isRealRemoving()
         }
 
-    fun showProgressDialog(progress: Boolean) {
+    open fun showLoading(show: Boolean) {
         if (!isAdded || instanceStateSaved) return
 
         val fragment = childFragmentManager.findFragmentByTag(PROGRESS_TAG)
-        if (fragment != null && !progress) {
+        if (fragment != null && !show) {
             (fragment as ProgressDialog).dismissAllowingStateLoss()
             childFragmentManager.executePendingTransactions()
-        } else if (fragment == null && progress) {
+        } else if (fragment == null && show) {
             ProgressDialog().show(childFragmentManager, PROGRESS_TAG)
             childFragmentManager.executePendingTransactions()
         }
@@ -124,5 +143,7 @@ abstract class BaseFragment : MvpAppCompatFragment() {
         startActivity(browserIntent)
     }
 
-    open fun onBackPressed() {}
+    open fun onBackPressed() {
+
+    }
 }

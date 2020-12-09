@@ -1,4 +1,92 @@
-## Changelog
+# Changelog
+
+Version 2.1.6*(2020-11-13)*
+----------------------------
+* Fixed crash when running analytics service in the background.
+
+Version 2.1.6*(2020-11-12)*
+----------------------------
+* Removed deprecated QR callback method
+
+Version 2.1.5*(2020-11-10)*
+----------------------------
+* Added support for 1:1 aspect ratio
+* QR scanner callback improvements
+* Changed arg type of `sendReport` method
+* General SDK API style improvements
+* Fixed authentication for player
+* Dependencies updated
+
+Version 2.1.0*(2020-09-10)*
+----------------------------
+* New: added filters for file selector and switcher for grid/list modes
+* New: changed toolbar icon in file selector from arrow to cross, other UI improvements
+* New: added `rerecord` event for recorder callback
+* Changes:
+  - arguments in `uploadProgress` event
+  - `uploadingStarted` now contains `videoToken` instead of `path` in args
+
+Version 2.0.13*(2020-09-10)*
+----------------------------
+* Changed implementation for single-choice mode in file selector.
+* Added ability to confirm uploading for file on Player screen.  
+
+Version 2.0.13*(2020-09-10)*
+----------------------------
+* uploadFromFileSelector method is deprecated, use startFileSelector instead.
+* Fixed session expiration issue which was blocking some cases for auth token.
+* Fixed issue with sending analytics events when there is no app token. 
+
+Version 2.0.12*(2020-09-04)*
+----------------------------
+* Fixed video_profile type in video model
+
+Version 2.0.11*(2020-09-04)*
+----------------------------
+* Fixed meta_profile type in video model and profile types for stream model
+
+Version 2.0.9*(2020-07-31)*
+----------------------------
+* Trimming request arguments 
+* Changed field types for *_profile values
+* Changed UI for countdown timer 
+* Dependencies updated 
+* some fixes for Xamarin 
+
+Version 2.0.8*(2020-07-31)*
+----------------------------
+* File selector now in single-selection mode bu default. Added a flag to allow multiple selection. 
+* Fixed crash when session expired.
+* Added methods for sending support email and crash report
+
+Version 2.0.7*(2020-07-14)*
+----------------------------
+* Changed fields names for better code style in Kotlin
+
+Version 2.0.6*(2020-07-14)*
+----------------------------
+* Fixed cancel action for screen recorder.
+* Fixed screen recording service when running on android 9+
+
+Version 2.0.4*(2020-07-07)*
+----------------------------
+* onPictureTaken callback hidden, since image-only not implemented yet
+* Fixed handling permissions list when access forbidden
+
+Version 2.0.3*(2020-07-07)*
+----------------------------
+* Fixed error callback for file selector 
+* Fixed pause/resume for player
+
+Version 2.0.2*(2020-07-02)*
+----------------------------
+* Fixed progress bar when loading folders list. 
+* Added temporary fix for file selector for Android API 29 
+
+Version 2.0.0*(2020-06-25)*
+----------------------------
+* Some methods renamed to make better Kotlin compatibility.
+* Version update to 2.x.x just to be consistent with internal documentation.
 
 Version 1.1.0*(2020-06-10)*
 ----------------------------

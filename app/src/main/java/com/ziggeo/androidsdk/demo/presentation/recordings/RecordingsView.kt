@@ -2,7 +2,9 @@ package com.ziggeo.androidsdk.demo.presentation.recordings
 
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
+import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import com.ziggeo.androidsdk.demo.presentation.global.BaseView
 import com.ziggeo.androidsdk.net.models.videos.VideoModel
 
 
@@ -11,8 +13,8 @@ import com.ziggeo.androidsdk.net.models.videos.VideoModel
  * Ziggeo, Inc.
  * alexb@ziggeo.com
  */
-@StateStrategyType(AddToEndSingleStrategy::class)
-interface RecordingsView : MvpView {
+@StateStrategyType(SkipStrategy::class)
+interface RecordingsView : BaseView {
 
     fun startCameraRecorder()
     fun startScreenRecorder()
@@ -22,9 +24,6 @@ interface RecordingsView : MvpView {
 
     fun showRecordingsList(list: List<VideoModel>)
     fun showNoRecordingsMessage()
-
-    fun showLoading()
-    fun hideLoading()
 
     fun hideActionFabs()
     fun showActionFabs()

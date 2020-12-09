@@ -9,7 +9,6 @@
     <string name="common_confirm_message">Are you sure?</string>
     <string name="err_common">Something wrong happened. Please, try again.</string>
     <string name="err_not_empty">Field should not be empty.</string>
-    <string name="email_chooser_title">Send email</string>
 
     <!-- Auth screen -->
     <string name="auth_message">Please go to ziggeo.com/quickstart on your desktop or laptop and scan QR code. This will allow you to connect your desktop and mobile demo experience</string>
@@ -21,12 +20,13 @@
 
     <!-- Drawer -->
     <string name="title_app_token">Application token:</string>
-    <string name="item_recordings">Recording</string>
+    <string name="item_recordings">Recordings</string>
     <string name="item_settings">Settings</string>
     <string name="item_sdks">Available SDKs</string>
     <string name="item_clients">Top clients</string>
     <string name="item_contact">Contact us</string>
     <string name="item_about">About</string>
+    <string name="item_log">Log</string>
     <string name="item_video_editor">Video Editor</string>
 
     <!-- Logout confirmation -->
@@ -39,12 +39,23 @@
 
     <!-- Settings screen -->
     <string name="settings_header">Settings</string>
+    <string name="hint_start_delay">Start delay (seconds)</string>
+    <string name="btn_save">Save</string>
+    <string name="successfully_saved_message">Saved</string>
+
+    <!-- Log screen -->
+    <string name="log_header">Log</string>
+    <string name="message_log_empty">There are no logs.</string>
 
     <!-- SDKs screen -->
     <string name="sdks_header">Available SDKs</string>
 
     <!-- Clients screen -->
     <string name="clients_header">Top Clients</string>
+
+    <!-- Logs screen -->
+    <string name="btn_send_report">Send report</string>
+    <string name="log_write_permission_rationale">The app need write permission to save log info.</string>
 
     <!-- Contact screen -->
     <string name="contact_header">Contact us</string>
@@ -95,5 +106,54 @@
 
     <!-- Fullscreen recorder -->
     <string name="btn_text_start_camera_recorder">Press me to start camera recorder</string>
+
+    <!-- Recorder events -->
+    <string name="ev_rec_loaded">Recorder: loaded</string>
+    <string name="ev_rec_manuallySubmitted">Recorder: manually submitted</string>
+    <string name="ev_rec_recordingStarted">Recorder: recording started</string>
+    <string name="ev_rec_recordingStopped">Recording stopped</string>
+    <string name="ev_rec_countdown">Recorder: countdown</string>
+    <string name="ev_rec_recordingProgress">Recorder: recording progress</string>
+    <string name="ev_rec_readyToRecord">Recorder: ready to record</string>
+    <string name="ev_rec_accessForbidden">Recorder: access forbidden</string>
+    <string name="ev_rec_accessGranted">Recorder: access granted</string>
+    <string name="ev_rec_noCamera">Recorder: no camera</string>
+    <string name="ev_rec_noMicrophone">Recorder: no microphone</string>
+    <string name="ev_rec_hasCamera">Recorder: has camera</string>
+    <string name="ev_rec_hasMicrophone">Recorder: has microphone</string>
+    <string name="ev_rec_microphoneHealth">Recorder: microphone health</string>
+    <string name="ev_rec_canceledByUser">Recorder: canceled by user</string>
+    <string name="ev_rec_error">Recorder: error</string>
+    <string name="ev_rec_streamingStarted">Recorder: streaming started</string>
+    <string name="ev_rec_streamingStopped">Recorder: streaming stopped</string>
+
+    <!-- Player events -->
+    <string name="ev_pl_loaded">Player: loaded</string>
+    <string name="ev_pl_accessForbidden">Player: access forbidden</string>
+    <string name="ev_pl_accessGranted">Player: access granted</string>
+    <string name="ev_pl_canceledByUser">Player: canceled by user</string>
+    <string name="ev_pl_error">Player: error</string>
+    <string name="ev_pl_playing">Player: playing</string>
+    <string name="ev_pl_paused">Player: paused</string>
+    <string name="ev_pl_ended">Player: ended</string>
+    <string name="ev_pl_seek">Player: seek</string>
+    <string name="ev_pl_readyToPlay">Player: ready to play</string>
+
+    <!-- Uploader events -->
+    <string name="ev_upl_uploaded">Uploader: uploaded</string>
+    <string name="ev_upl_uploadingStarted">Uploader: uploading started</string>
+    <string name="ev_upl_uploadProgress">Uploader: upload progress</string>
+    <string name="ev_upl_processing">Uploader: processing</string>
+    <string name="ev_upl_processed">Uploader: processed</string>
+    <string name="ev_upl_verified">Uploader: verified</string>
+    <string name="ev_upl_error">Uploader: error</string>
+
+    <!-- Uploader events -->
+    <string name="ev_fs_loaded">FileSelector: loaded</string>
+    <string name="ev_fs_accessForbidden">FileSelector: access forbidden</string>
+    <string name="ev_fs_accessGranted">FileSelector: access granted</string>
+    <string name="ev_fs_canceledByUser">FileSelector: canceled by user</string>
+    <string name="ev_fs_uploadSelected">FileSelector: upload selected</string>
+    <string name="ev_fs_error">FileSelector: error</string>
 
 </resources>

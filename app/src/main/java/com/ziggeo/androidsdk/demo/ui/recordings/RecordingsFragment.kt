@@ -1,10 +1,12 @@
 package com.ziggeo.androidsdk.demo.ui.recordings
 
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -42,6 +44,7 @@ class RecordingsFragment : BaseToolbarFragment<RecordingsView, RecordingsPresent
         super.onViewCreated(view, savedInstanceState)
         initFab()
         pull_to_refresh.setOnRefreshListener {
+            analytics.logEvent("refresh_recordings", null)
             presenter.onPullToRefresh()
         }
     }
@@ -72,6 +75,7 @@ class RecordingsFragment : BaseToolbarFragment<RecordingsView, RecordingsPresent
     }
 
     override fun showActionFabs() {
+        analytics.logEvent("fab_show_actions", null)
         fab_camera.show()
         fab_screen.show()
         fab_audio.show()
@@ -80,6 +84,7 @@ class RecordingsFragment : BaseToolbarFragment<RecordingsView, RecordingsPresent
     }
 
     override fun hideActionFabs() {
+        analytics.logEvent("fab_hide_actions", null)
         fab_camera.hide()
         fab_screen.hide()
         fab_audio.hide()
@@ -100,32 +105,38 @@ class RecordingsFragment : BaseToolbarFragment<RecordingsView, RecordingsPresent
         rv_recordings.visibility = View.INVISIBLE
     }
 
-    override fun showLoading() {
-        tv_empty_list.visibility = View.INVISIBLE
-        pull_to_refresh.isRefreshing = true
-    }
-
-    override fun hideLoading() {
-        pull_to_refresh.isRefreshing = false
+    override fun showLoading(show: Boolean) {
+        if (show) {
+            tv_empty_list.visibility = View.INVISIBLE
+            pull_to_refresh.isRefreshing = true
+        } else {
+            pull_to_refresh.isRefreshing = false
+        }
     }
 
     override fun startCameraRecorder() {
+        analytics.logEvent("start_camera_recorder", null)
         ziggeo.startCameraRecorder()
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun startScreenRecorder() {
+        analytics.logEvent("start_screen_recorder", null)
         ziggeo.startScreenRecorder(null)
     }
 
     override fun startAudioRecorder() {
+        analytics.logEvent("start_audio_recorder", null)
         Toast.makeText(context, R.string.coming_soon, Toast.LENGTH_SHORT).show()
     }
 
     override fun startImageCapture() {
+        analytics.logEvent("start_image_capture", null)
         Toast.makeText(context, R.string.coming_soon, Toast.LENGTH_SHORT).show()
     }
 
     override fun startFileSelector() {
+        analytics.logEvent("start_file_selector", null)
         ziggeo.uploadFromFileSelector()
     }
 

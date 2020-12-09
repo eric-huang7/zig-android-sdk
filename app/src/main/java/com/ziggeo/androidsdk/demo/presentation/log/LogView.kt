@@ -1,8 +1,9 @@
-package com.ziggeo.androidsdk.demo.presentation.contactus
+package com.ziggeo.androidsdk.demo.presentation.log
 
-import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import com.ziggeo.androidsdk.demo.presentation.global.BaseView
+import com.ziggeo.androidsdk.log.LogModel
 
 
 /**
@@ -11,8 +12,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
  * alexb@ziggeo.com
  */
 @StateStrategyType(AddToEndSingleStrategy::class)
-interface ContactUsView : MvpView {
-
-    fun openSupportPage()
-
+interface LogView : BaseView {
+    fun showLogs(logModels: List<LogModel>)
+    fun showNoLogsMessage()
 }

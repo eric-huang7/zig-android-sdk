@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.view.GravityCompat
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.google.firebase.analytics.ktx.logEvent
 import com.ziggeo.androidsdk.demo.R
 import com.ziggeo.androidsdk.demo.Screens
 import com.ziggeo.androidsdk.demo.presentation.main.MainFlowPresenter
@@ -54,6 +55,9 @@ class MainFlowFragment : BaseFlowFragment(), MainFlowView,
     }
 
     private fun openNavDrawer(open: Boolean) {
+        analytics.logEvent("drawer_open") {
+            param("open", open.toString())
+        }
         if (open) drawer.openDrawer(GravityCompat.START)
         else drawer.closeDrawer(GravityCompat.START)
     }
@@ -88,6 +92,10 @@ class MainFlowFragment : BaseFlowFragment(), MainFlowView,
 
     override fun openSettingsScreen() {
         router.newRootScreen(Screens.Settings)
+    }
+
+    override fun openLogScreen() {
+        router.newRootScreen(Screens.Log)
     }
 
     override fun openSdksScreen() {
@@ -145,6 +153,7 @@ class MainFlowFragment : BaseFlowFragment(), MainFlowView,
         mi_clients.tag = CLIENTS
         mi_contact.tag = CONTACT_US
         mi_about.tag = ABOUT
+        mi_log.tag = LOG
 
         mi_recordings.setOnClickListener(itemClickListener)
         mi_video_editor.setOnClickListener(itemClickListener)
@@ -153,6 +162,7 @@ class MainFlowFragment : BaseFlowFragment(), MainFlowView,
         mi_clients.setOnClickListener(itemClickListener)
         mi_contact.setOnClickListener(itemClickListener)
         mi_about.setOnClickListener(itemClickListener)
+        mi_log.setOnClickListener(itemClickListener)
 
         selectMenuItem(RECORDINGS)
     }

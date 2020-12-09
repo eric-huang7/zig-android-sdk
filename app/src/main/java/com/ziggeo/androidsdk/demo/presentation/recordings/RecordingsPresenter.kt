@@ -1,6 +1,8 @@
 package com.ziggeo.androidsdk.demo.presentation.recordings
 
 import com.arellomobile.mvp.InjectViewState
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.ziggeo.androidsdk.demo.R
 import com.ziggeo.androidsdk.demo.Screens
 import com.ziggeo.androidsdk.demo.model.data.storage.KVStorage
@@ -9,7 +11,7 @@ import com.ziggeo.androidsdk.demo.model.interactor.RecordingsInteractor
 import com.ziggeo.androidsdk.demo.model.system.flow.FlowRouter
 import com.ziggeo.androidsdk.demo.model.system.message.SystemMessage
 import com.ziggeo.androidsdk.demo.model.system.message.SystemMessageNotifier
-import com.ziggeo.androidsdk.demo.presentation.global.BasePresenter
+import com.ziggeo.androidsdk.demo.presentation.global.BaseMainFlowPresenter
 import com.ziggeo.androidsdk.net.exceptions.ResponseException
 import com.ziggeo.androidsdk.net.models.videos.VideoModel
 import io.reactivex.disposables.Disposable
@@ -26,8 +28,9 @@ class RecordingsPresenter @Inject constructor(
     private val recordingsInteractor: RecordingsInteractor,
     private var router: FlowRouter,
     private var kvStorage: KVStorage,
-    systemMessageNotifier: SystemMessageNotifier
-) : BasePresenter<RecordingsView>(systemMessageNotifier) {
+    systemMessageNotifier: SystemMessageNotifier,
+    analytics: FirebaseAnalytics
+) : BaseMainFlowPresenter<RecordingsView>(router, systemMessageNotifier, analytics) {
 
     private var fabActionsExpanded = false
     private var disposable: Disposable? = null
@@ -40,11 +43,6 @@ class RecordingsPresenter @Inject constructor(
     override fun detachView(view: RecordingsView?) {
         super.detachView(view)
         disposable?.dispose()
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        router.exit()
     }
 
     fun onPullToRefresh() {
@@ -102,17 +100,23 @@ class RecordingsPresenter @Inject constructor(
 
     private fun updateRecordingsList() {
         disposable = recordingsInteractor.getRecordingsList()
-            .doOnSubscribe { viewState.showLoading() }
-            .doFinally { viewState.hideLoading() }
+            .doOnSubscribe { viewState.showLoading(true) }
+            .doFinally { viewState.showLoading(false) }
             .subscribe({ data ->
                 if (data.isEmpty()) {
+                    analytics.logEvent("loaded_recordings_success") {
+                        param("count", data.size.toString())
+                    }
                     viewState.showNoRecordingsMessage()
                 } else {
                     viewState.showRecordingsList(data)
                 }
             }, {
-                if (it is ResponseException && indexingNotAllowed(it.statusCode)) {
+                if (it is ResponseException && indexOperationNotAllowed(it.statusCode)) {
                     systemMessageNotifier.send(SystemMessage(R.string.err_check_indexing))
+                    analytics.logEvent("loaded_recordings_error") {
+                        param("reason", "indexOperationNotAllowed")
+                    }
                 } else {
                     commonOnError(it)
                     viewState.showNoRecordingsMessage()
@@ -120,7 +124,10 @@ class RecordingsPresenter @Inject constructor(
             })
     }
 
-    private fun indexingNotAllowed(code: Int): Boolean {
+    /**
+     * Operation can be forbidden in account settings
+     */
+    private fun indexOperationNotAllowed(code: Int): Boolean {
         val unauthorized = 401
         return code == unauthorized
     }

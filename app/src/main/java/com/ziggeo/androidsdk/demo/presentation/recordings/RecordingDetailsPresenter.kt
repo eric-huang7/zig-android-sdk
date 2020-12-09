@@ -1,6 +1,8 @@
 package com.ziggeo.androidsdk.demo.presentation.recordings
 
 import com.arellomobile.mvp.InjectViewState
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.ziggeo.androidsdk.IZiggeo
 import com.ziggeo.androidsdk.demo.Screens
 import com.ziggeo.androidsdk.demo.model.data.storage.KVStorage
@@ -25,8 +27,9 @@ class RecordingDetailsPresenter @Inject constructor(
     private var router: FlowRouter,
     private var kvStorage: KVStorage,
     private var ziggeo: IZiggeo,
-    smn: SystemMessageNotifier
-) : BasePresenter<RecordingDetailsView>(smn) {
+    smn: SystemMessageNotifier,
+    analytics: FirebaseAnalytics
+) : BasePresenter<RecordingDetailsView>(smn, analytics) {
 
     private lateinit var model: VideoModel
     private lateinit var videoToken: String
@@ -35,16 +38,19 @@ class RecordingDetailsPresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         videoToken = kvStorage.get(VIDEO_TOKEN) as String
-        viewState.showPreview(recordingsInteractor.getImageUrl(videoToken))
         disposable = recordingsInteractor.getInfo(videoToken)
+            .flatMap {
+                this.model = it
+                viewState.showRecordingData(model)
+                recordingsInteractor.getImageUrl(videoToken)
+            }
             .doOnSubscribe {
-                viewState.showProgressDialog(true)
+                viewState.showLoading(true)
             }.doFinally {
-                viewState.showProgressDialog(false)
-            }.subscribe { model, throwable ->
-                model?.let {
-                    this.model = model
-                    viewState.showRecordingData(model)
+                viewState.showLoading(false)
+            }.subscribe { url, throwable ->
+                url?.let {
+                    viewState.showPreview(it)
                 }
                 throwable?.let {
                     commonOnError(it)
@@ -54,6 +60,9 @@ class RecordingDetailsPresenter @Inject constructor(
     }
 
     fun onPlayClicked() {
+        analytics.logEvent("play_clicked") {
+            param("video_token", videoToken)
+        }
         ziggeo.startPlayer(videoToken)
     }
 
@@ -63,12 +72,15 @@ class RecordingDetailsPresenter @Inject constructor(
 
     fun onConfirmYesClicked() {
         viewState.hideConfirmDeleteDialog()
+        analytics.logEvent("delete_video") {
+            param("video_token", videoToken)
+        }
         disposable = recordingsInteractor.destroy(videoToken)
             .doOnError { commonOnError(it) }
             .doOnSubscribe {
-                viewState.showProgressDialog(true)
+                viewState.showLoading(true)
             }.doFinally {
-                viewState.showProgressDialog(false)
+                viewState.showLoading(false)
             }.subscribe {
                 router.finishFlow()
             }
@@ -79,6 +91,9 @@ class RecordingDetailsPresenter @Inject constructor(
     }
 
     fun onSaveClicked(tokenOrKey: String, title: String, description: String) {
+        analytics.logEvent("save_video_details") {
+            param("video_token", videoToken)
+        }
         if (model.token != tokenOrKey) {
             model.key = tokenOrKey
         }
@@ -88,9 +103,9 @@ class RecordingDetailsPresenter @Inject constructor(
         disposable = recordingsInteractor.updateInfo(model)
             .doOnError { commonOnError(it) }
             .doOnSubscribe {
-                viewState.showProgressDialog(true)
+                viewState.showLoading(true)
             }.doFinally {
-                viewState.showProgressDialog(false)
+                viewState.showLoading(false)
             }.subscribe { model ->
                 this.model = model
                 viewState.showViewsInViewState()
@@ -98,6 +113,9 @@ class RecordingDetailsPresenter @Inject constructor(
     }
 
     fun onEditClicked() {
+        analytics.logEvent("edit_video_details") {
+            param("video_token", videoToken)
+        }
         viewState.showViewsInEditState()
     }
 

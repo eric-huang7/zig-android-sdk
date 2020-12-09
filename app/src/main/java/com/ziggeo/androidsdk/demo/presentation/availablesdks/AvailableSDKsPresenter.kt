@@ -1,14 +1,16 @@
 package com.ziggeo.androidsdk.demo.presentation.availablesdks
 
 import com.arellomobile.mvp.InjectViewState
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.ziggeo.androidsdk.demo.R
 import com.ziggeo.androidsdk.demo.model.data.feature.FeatureModel
 import com.ziggeo.androidsdk.demo.model.data.feature.SdkModel
 import com.ziggeo.androidsdk.demo.model.interactor.AvailableSdksInteractor
+import com.ziggeo.androidsdk.demo.model.system.flow.FlowRouter
 import com.ziggeo.androidsdk.demo.model.system.message.SystemMessage
 import com.ziggeo.androidsdk.demo.model.system.message.SystemMessageNotifier
 import com.ziggeo.androidsdk.demo.model.system.message.SystemMessageType
-import com.ziggeo.androidsdk.demo.presentation.global.BasePresenter
+import com.ziggeo.androidsdk.demo.presentation.global.BaseMainFlowPresenter
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
@@ -21,8 +23,10 @@ import javax.inject.Inject
 @InjectViewState
 class AvailableSDKsPresenter @Inject constructor(
     private var availableSdksInteractor: AvailableSdksInteractor,
-    systemMessageNotifier: SystemMessageNotifier
-) : BasePresenter<AvailableSDKsView>(systemMessageNotifier) {
+    router: FlowRouter,
+    systemMessageNotifier: SystemMessageNotifier,
+    analytics: FirebaseAnalytics
+) : BaseMainFlowPresenter<AvailableSDKsView>(router, systemMessageNotifier, analytics) {
     private var disposable: Disposable? = null
 
     override fun onFirstViewAttach() {
